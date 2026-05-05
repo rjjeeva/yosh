@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Queen Yoshini 💖</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --primary-pink: #ff758c;
+            --dark-pink: #ff4d6d;
+            --soft-white: rgba(255, 255, 255, 0.85);
+        }
+
+        body {
+            margin: 0; padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            height: 100vh; overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+            cursor: none;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container-wrapper {
+            position: relative; width: 100%; max-width: 600px;
+            padding: 20px; z-index: 10;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 30px;
+            padding: 50px 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            text-align: center; color: white;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        h2 { font-weight: 600; font-size: 2rem; margin-bottom: 20px; }
+
+        .btn-love {
+            background: white; color: #ff4d6d;
+            border-radius: 50px; padding: 14px 40px;
+            margin: 15px; border: none;
+            font-weight: 600; font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .btn-love:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 25px rgba(255, 77, 109, 0.4);
+            background: #fff0f3;
+        }
+
+        #noBtn { position: absolute; background: rgba(255, 255, 255, 0.4); color: white; z-index: 100; }
+
+        .hidden { display: none !important; }
+
+        /* Story Mode Progress Bars */
+        .progress-container {
+            display: flex; gap: 5px; position: absolute; top: 15px; left: 10%; width: 80%;
+        }
+        .bar { height: 4px; flex: 1; background: rgba(255,255,255,0.3); border-radius: 10px; overflow: hidden; }
+        .bar-fill { height: 100%; width: 0%; background: white; transition: width 4s linear; }
+
+        .story-text { font-size: 1.4rem; line-height: 1.6; min-height: 120px; display: flex; align-items: center; justify-content: center; }
+
+        .heart-loader { font-size: 80px; animation: pulse 1s infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.3); } }
+
+        .bday-title { font-family: 'Dancing Script', cursive; font-size: 3.5rem; color: white; margin-bottom: 20px; }
+
+        .cursor-heart { position: fixed; pointer-events: none; color: #ff4d6d; font-size: 20px; z-index: 9999; }
+
+        #fireworksOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.9); z-index: 2000;
+            display: flex; justify-content: center; align-items: center; flex-direction: column;
+        }
+
+        .lucky-text { font-family: 'Dancing Script', cursive; font-size: 4.5rem; color: #ff4d6d; animation: glowText 1s infinite alternate; }
+        @keyframes glowText { from { text-shadow: 0 0 10px #fff; } to { text-shadow: 0 0 30px #ff4d6d; } }
+
+        /* Hug Animation */
+        @keyframes hugFly {
+            0% { transform: translateY(100vh) scale(0.5); opacity: 1; }
+            100% { transform: translateY(-20vh) scale(2); opacity: 0; }
+        }
+        .hug-heart { position: fixed; bottom: -50px; font-size: 50px; animation: hugFly 2.5s ease-out forwards; z-index: 5000; }
+    </style>
+</head>
+<body>
+
+    <div class="floating-hearts" id="bg-hearts"></div>
+
+    <div class="container-wrapper">
+        <div class="glass-card" id="questionBox">
+            <h2>Hey Yoshini... 😊</h2>
+            <p style="opacity: 0.9;">I've been wanting to ask you something special.</p>
+            <h3 class="mt-4" style="font-weight: 700;">Will you be my forever? ❤️</h3>
+            <div class="mt-4" style="min-height: 80px; position: relative;">
+                <button class="btn-love" onclick="startStory()">Yes, I Will! 😍</button>
+                <button class="btn-love" id="noBtn">No 😅</button>
+            </div>
+        </div>
+
+        <div class="glass-card hidden" id="storyBox">
+            <div class="progress-container">
+                <div class="bar"><div class="bar-fill" id="fill1"></div></div>
+                <div class="bar"><div class="bar-fill" id="fill2"></div></div>
+                <div class="bar"><div class="bar-fill" id="fill3"></div></div>
+            </div>
+            <div id="typewriter" class="story-text mt-4"></div>
+            <button class="btn-love hidden" id="nextBtn" onclick="nextStep()">Next ✨</button>
+        </div>
+
+        <div class="center-box hidden text-center" id="loaderBox" style="height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+            <div class="heart-loader">💖</div>
+            <h2 class="text-white mt-4">Creating Magic for You...</h2>
+        </div>
+
+        <div class="glass-card hidden" id="finalBox">
+            <h1 class="bday-title">Happy Birthday, Yoshini! 🎂</h1>
+            <div class="message-body">
+                <p>Today is a celebration of the day the most beautiful soul entered this world. ✨</p>
+                <p>You are more than just my partner; you are my <span class="highlight">greatest blessing</span>, my quiet peace, and my loudest joy.</p>
+                <p class="mt-4" style="font-style: italic;">"On May 10th and every day after, I promise to cherish you and love you with everything I have."</p>
+                
+                <div class="mt-4 d-flex flex-wrap justify-content-center">
+                    <button class="btn-love" onclick="sendHug()">Send you a hug 🤗</button>
+                    <button class="btn-love" onclick="triggerLastSurprise()">One last surprise 🎁</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="fireworksOverlay" class="hidden">
+        <h1 class="lucky-text">I’m so lucky to have you ❤️</h1>
+        <button class="btn-love mt-5" onclick="closeSurprise()">Back to Memories 🌹</button>
+    </div>
+
+    <audio id="song" loop><source src="your-song.mp3" type="audio/mpeg"></audio>
+
+    <script>
+        let currentStep = 0;
+        const storyPhrases = [
+            "Hey Yoshini... I was just thinking about how much you mean to me.",
+            "Honestly, you changed my life in ways I never thought possible.",
+            "And today is the most special day... because it's all about YOU!"
+        ];
+
+        // Cursor Effect
+        document.addEventListener('mousemove', (e) => {
+            const heart = document.createElement('div');
+            heart.innerHTML = '💖'; heart.className = 'cursor-heart';
+            heart.style.left = e.clientX + 'px'; heart.style.top = e.clientY + 'px';
+            document.body.appendChild(heart);
+            setTimeout(() => {
+                heart.style.transform = `translateY(-50px) scale(0)`;
+                heart.style.opacity = '0';
+                heart.style.transition = 'all 0.8s ease';
+            }, 10);
+            setTimeout(() => heart.remove(), 800);
+        });
+
+        // No Button
+        const noBtn = document.getElementById("noBtn");
+        noBtn.addEventListener("mouseover", () => {
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = Math.random() * (window.innerWidth - 150) + "px";
+            noBtn.style.top = Math.random() * (window.innerHeight - 100) + "px";
+        });
+
+        // Story Mode Logic
+        function startStory() {
+            document.getElementById("questionBox").classList.add("hidden");
+            document.getElementById("storyBox").classList.remove("hidden");
+            document.getElementById("song").play().catch(e => {});
+            nextStep();
+        }
+
+        function nextStep() {
+            if (currentStep < storyPhrases.length) {
+                const btn = document.getElementById("nextBtn");
+                btn.classList.add("hidden");
+                
+                document.getElementById(`fill${currentStep + 1}`).style.width = "100%";
+                
+                typeWriter(storyPhrases[currentStep], "typewriter", () => {
+                    btn.classList.remove("hidden");
+                });
+                currentStep++;
+            } else {
+                revealBirthday();
+            }
+        }
+
+        function typeWriter(text, elementId, callback) {
+            let i = 0;
+            const ele = document.getElementById(elementId);
+            ele.innerHTML = "";
+            function type() {
+                if (i < text.length) {
+                    ele.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, 40);
+                } else { callback(); }
+            }
+            type();
+        }
+
+        function revealBirthday() {
+            document.getElementById("storyBox").classList.add("hidden");
+            document.getElementById("loaderBox").classList.remove("hidden");
+            setTimeout(() => {
+                document.getElementById("loaderBox").classList.add("hidden");
+                document.getElementById("finalBox").classList.remove("hidden");
+                triggerConfetti();
+            }, 2500);
+        }
+
+        function triggerConfetti() {
+            const end = Date.now() + 5000;
+            (function frame() {
+                confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ffffff', '#ff4d6d'] });
+                confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ffffff', '#ff4d6d'] });
+                if (Date.now() < end) requestAnimationFrame(frame);
+            }());
+        }
+
+        // Hug Logic
+        function sendHug() {
+            if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+            for (let i = 0; i < 25; i++) {
+                setTimeout(() => {
+                    const h = document.createElement('div');
+                    h.innerHTML = '💖'; h.className = 'hug-heart';
+                    h.style.left = Math.random() * 100 + "vw";
+                    document.body.appendChild(h);
+                    setTimeout(() => h.remove(), 2500);
+                }, i * 150);
+            }
+        }
+
+        function triggerLastSurprise() {
+            document.getElementById("fireworksOverlay").classList.remove("hidden");
+            var end = Date.now() + 10000;
+            (function frame() {
+                confetti({ particleCount: 7, startVelocity: 30, spread: 360, origin: { x: Math.random(), y: Math.random() - 0.2 } });
+                if (Date.now() < end) requestAnimationFrame(frame);
+            }());
+        }
+
+        function closeSurprise() { document.getElementById("fireworksOverlay").classList.add("hidden"); }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.innerHTML = '❤️';
+            heart.style.position = 'absolute';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = '100vh';
+            heart.style.opacity = Math.random();
+            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+            heart.style.transition = 'transform 5s linear, opacity 5s';
+            document.getElementById('bg-hearts').appendChild(heart);
+            setTimeout(() => {
+                heart.style.transform = `translateY(-110vh) rotate(${Math.random() * 360}deg)`;
+                heart.style.opacity = '0';
+            }, 100);
+            setTimeout(() => heart.remove(), 6000);
+        }
+        setInterval(createHeart, 300);
+    </script>
+</body>
+</html>
